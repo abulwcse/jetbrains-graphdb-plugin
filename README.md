@@ -7,28 +7,6 @@ Write Cypher, manage connections, run queries, and explore results as a graph or
 > [Open an issue on GitHub](https://github.com/abulwcse/jetbrains-graphdb-plugin/issues/new) — it's the fastest way to get it resolved.
 
 ---
-
-## Screenshots
-
-### Data Sources
-![Data Sources panel](docs/screenshots/datasources.png)
-
-### Cypher Editor
-![Cypher editor with syntax highlighting](docs/screenshots/editor.png)
-
-### Graph Result
-![Graph visualisation with node colouring and legend](docs/screenshots/graph.png)
-
-### Node Properties
-![Node properties dialog](docs/screenshots/node-properties.png)
-
-### Terminal Log
-![Terminal-style query log](docs/screenshots/log.png)
-
-> **To add screenshots:** create a `docs/screenshots/` folder, capture the screens listed above, and replace the placeholder paths.
-
----
-
 ## Features
 
 | | |
