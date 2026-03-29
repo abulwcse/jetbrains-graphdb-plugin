@@ -13,7 +13,7 @@
          version    : kept in sync with gradle.properties / build.gradle.kts
          ======================================================================== -->
     <id>com.graphdbplugin</id>
-    <name>GraphDB Plugin</name>
+    <name>GraphDB for Neo4j</name>
     <version>1.0.0</version>
 
     <!-- ========================================================================
