@@ -14,7 +14,7 @@
          ======================================================================== -->
     <id>com.graphdbplugin</id>
     <name>GraphDB for Neo4j</name>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <!-- ========================================================================
          Vendor Information
@@ -60,6 +60,10 @@
          Change Notes — shown in the Marketplace version history.
          ======================================================================== -->
     <change-notes><![CDATA[
+        <b>1.2.0</b>
+        <ul>
+            <li>Extended IDE compatibility to cover GoLand 2026.1 (build 261).</li>
+        </ul>
         <b>1.1.0</b>
         <ul>
             <li>Extended IDE compatibility to cover GoLand 2025.1 – 2025.3 (builds 251–253).</li>
