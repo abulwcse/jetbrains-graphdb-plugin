@@ -1,0 +1,46 @@
+<!-- GraphDB Plugin main icon — 13x13 px, dark-theme aware.
+     Depicts a simple graph network: three nodes connected by edges,
+     suggesting a graph database topology. -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="13" height="13"
+     viewBox="0 0 13 13">
+
+  <!-- Edges / connections between nodes -->
+  <!-- Edge: top-left node to centre node -->
+  <line x1="3" y1="3" x2="6.5" y2="6.5"
+        stroke="#4A90D9" stroke-width="1.2"
+        stroke-linecap="round"/>
+
+  <!-- Edge: top-right node to centre node -->
+  <line x1="10" y1="3" x2="6.5" y2="6.5"
+        stroke="#4A90D9" stroke-width="1.2"
+        stroke-linecap="round"/>
+
+  <!-- Edge: bottom node to centre node -->
+  <line x1="6.5" y1="10" x2="6.5" y2="6.5"
+        stroke="#4A90D9" stroke-width="1.2"
+        stroke-linecap="round"/>
+
+  <!-- Edge: top-left to top-right (horizontal) -->
+  <line x1="3" y1="3" x2="10" y2="3"
+        stroke="#4A90D9" stroke-width="1"
+        stroke-linecap="round"
+        opacity="0.6"/>
+
+  <!-- Centre node (hub) -->
+  <circle cx="6.5" cy="6.5" r="2"
+          fill="#4A90D9"/>
+
+  <!-- Top-left node -->
+  <circle cx="3" cy="3" r="1.4"
+          fill="#7AB8F5"/>
+
+  <!-- Top-right node -->
+  <circle cx="10" cy="3" r="1.4"
+          fill="#7AB8F5"/>
+
+  <!-- Bottom node -->
+  <circle cx="6.5" cy="10" r="1.4"
+          fill="#7AB8F5"/>
+
+</svg>

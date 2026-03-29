@@ -1,0 +1,30 @@
+<!-- GraphDB Plugin data-source icon — 13x13 px, dark-theme aware.
+     Depicts a classic database cylinder (three horizontal ellipses stacked
+     vertically to suggest layers/storage), conventionally used for database
+     connection entries in IDE database tools. -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="13" height="13"
+     viewBox="0 0 13 13">
+
+  <!-- Cylinder body (rectangle between top and bottom ellipses) -->
+  <rect x="1.5" y="4" width="10" height="6"
+        fill="#5C9BD6"
+        rx="0" ry="0"/>
+
+  <!-- Bottom ellipse cap -->
+  <ellipse cx="6.5" cy="10" rx="5" ry="1.6"
+           fill="#3A78B5"/>
+
+  <!-- Middle stack line (visual separator suggesting storage layers) -->
+  <ellipse cx="6.5" cy="7" rx="5" ry="1.4"
+           fill="#4A87C8"
+           stroke="#3A78B5"
+           stroke-width="0.4"/>
+
+  <!-- Top ellipse cap (lightest — nearest to the viewer) -->
+  <ellipse cx="6.5" cy="4" rx="5" ry="1.6"
+           fill="#7AB8F5"
+           stroke="#5C9BD6"
+           stroke-width="0.4"/>
+
+</svg>

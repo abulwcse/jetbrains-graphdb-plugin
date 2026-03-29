@@ -1,0 +1,298 @@
+<!-- ============================================================================
+     GraphDB Plugin — plugin.xml
+     This file is the primary descriptor for the JetBrains plugin runtime.
+     It declares the plugin identity, dependencies, extension points, services,
+     actions, and all UI contributions such as tool windows.
+     ============================================================================ -->
+<idea-plugin>
+
+    <!-- ========================================================================
+         Plugin Identity
+         id         : unique reverse-DNS identifier; never changes after publishing
+         name       : human-readable name shown in the Marketplace and Settings UI
+         version    : kept in sync with gradle.properties / build.gradle.kts
+         ======================================================================== -->
+    <id>com.graphdbplugin</id>
+    <name>GraphDB Plugin</name>
+    <version>1.0.0</version>
+
+    <!-- ========================================================================
+         Vendor Information
+         ======================================================================== -->
+    <vendor url="https://github.com/graphdb-plugin" email="support@graphdbplugin.com">
+        GraphDB Plugin Contributors
+    </vendor>
+
+    <!-- ========================================================================
+         Plugin Description (shown on the Marketplace listing page and in
+         Settings → Plugins → description panel).
+         Must be valid HTML.
+         ======================================================================== -->
+    <description><![CDATA[
+        <h2>GraphDB Plugin — Neo4j / Bolt Database Manager for JetBrains IDEs</h2>
+        <p>
+            Manage Neo4j graph databases directly inside your favourite JetBrains IDE.
+            Connect via the Bolt protocol, browse nodes and relationships, execute Cypher
+            queries with syntax highlighting and auto-completion, and visualise results as
+            an interactive graph canvas.
+        </p>
+        <h3>Phase 1 Features (this release)</h3>
+        <ul>
+            <li>Add, edit and delete Bolt data sources with per-source colour coding</li>
+            <li>Credentials stored securely in the OS keychain via IDE PasswordSafe</li>
+            <li>Test-Connection button with live feedback in the data-source dialog</li>
+            <li>Persistent data-source list (survives IDE restarts)</li>
+        </ul>
+        <h3>Planned Features (upcoming phases)</h3>
+        <ul>
+            <li>Cypher query editor with syntax highlighting, completion and live linting</li>
+            <li>Results table and interactive graph-canvas visualisation</li>
+            <li>Schema browser — labels, relationship types, property keys, indexes</li>
+            <li>Query history and favourite queries</li>
+            <li>Export results as CSV / JSON</li>
+        </ul>
+        <p>
+            Requires IntelliJ IDEA 2024.3 or later and a running Neo4j 5.x instance.
+        </p>
+    ]]></description>
+
+    <!-- ========================================================================
+         Change Notes — shown in the Marketplace version history.
+         ======================================================================== -->
+    <change-notes><![CDATA[
+        <b>1.0.0</b>
+        <ul>
+            <li>Initial Phase 1 release: data-source management, Bolt connectivity,
+                OS keychain password storage.</li>
+        </ul>
+    ]]></change-notes>
+
+    <!-- ========================================================================
+         Platform Dependency
+         com.intellij.modules.platform is satisfied by every JetBrains IDE and
+         is the minimal dependency for a platform-level plugin.
+         ======================================================================== -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- ========================================================================
+         Extensions
+         Each <extensions defaultExtensionNs="com.intellij"> block registers
+         contributions to IntelliJ Platform extension points.
+         ======================================================================== -->
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- ====================================================================
+             Tool Window
+             Adds the "GraphDB" panel to the IDE sidebar.
+               id           : used in action references and programmatic lookup
+               anchor       : docks the window to the right stripe by default
+               icon         : path inside the resources root (loaded via IconLoader)
+               factoryClass : creates the Swing content when the window is first shown
+             ==================================================================== -->
+        <toolWindow
+            id="GraphDB"
+            anchor="right"
+            icon="/icons/graphdb.svg"
+            factoryClass="com.graphdbplugin.toolwindow.GraphDbToolWindowFactory"
+            doNotActivateOnStart="true"/>
+
+        <!-- ====================================================================
+             Application-Level Service: DataSourceManager
+             Persists the list of Bolt data sources across IDE restarts.
+             Registered at the application level so data sources are shared
+             across all open projects in the same IDE instance.
+             ==================================================================== -->
+        <applicationService
+            serviceInterface="com.graphdbplugin.datasource.DataSourceManager"
+            serviceImplementation="com.graphdbplugin.datasource.DataSourceManager"/>
+
+        <!-- ====================================================================
+             Project-Level Service: GraphDbProjectService
+             Tracks per-project state such as the currently active data source.
+             ==================================================================== -->
+        <projectService
+            serviceInterface="com.graphdbplugin.services.GraphDbProjectService"
+            serviceImplementation="com.graphdbplugin.services.GraphDbProjectService"/>
+
+        <!-- ====================================================================
+             Notification Group
+             Used to display balloon notifications for connection events,
+             errors and informational messages from the plugin.
+             ==================================================================== -->
+        <notificationGroup
+            id="GraphDB.Notifications"
+            displayType="BALLOON"
+            key="notification.group.graphdb"/>
+
+        <!-- ====================================================================
+             Project-Level Service: SchemaIntrospectionService
+             Caches graph schema metadata (labels, relationship types, property
+             keys) fetched asynchronously from the connected Neo4j instance.
+             ==================================================================== -->
+        <projectService
+            serviceInterface="com.graphdbplugin.services.SchemaIntrospectionService"
+            serviceImplementation="com.graphdbplugin.services.SchemaIntrospectionService"/>
+
+        <!-- ====================================================================
+             Cypher File Type
+             Registers the .cypher and .cql file extensions so the IDE
+             associates them with the Cypher language and routes them through
+             the Cypher lexer, parser, and highlighter.
+             ==================================================================== -->
+        <fileType name="Cypher"
+                  implementationClass="com.graphdbplugin.language.CypherFileType"
+                  fieldName="INSTANCE"
+                  language="Cypher"
+                  extensions="cypher;cql"/>
+
+        <!-- ====================================================================
+             Cypher Language Parser
+             Supplies the ParserDefinition that the IntelliJ Platform uses to
+             lex and parse Cypher source files into a PSI tree.
+             ==================================================================== -->
+        <lang.parserDefinition language="Cypher"
+            implementationClass="com.graphdbplugin.language.parser.CypherParserDefinition"/>
+
+        <!-- ====================================================================
+             Cypher Syntax Highlighting
+             Factory that creates a CypherSyntaxHighlighter on demand, enabling
+             token-based colouring in the editor and diff views.
+             ==================================================================== -->
+        <lang.syntaxHighlighterFactory language="Cypher"
+            implementationClass="com.graphdbplugin.language.highlighting.CypherSyntaxHighlighterFactory"/>
+
+        <!-- ====================================================================
+             Color Settings Page for Cypher
+             Adds a "Cypher" node under Settings → Editor → Color Scheme so
+             users can customise keyword, comment, string colours, etc.
+             ==================================================================== -->
+        <colorSettingsPage
+            implementationClass="com.graphdbplugin.language.highlighting.CypherColorSettingsPage"/>
+
+        <!-- ====================================================================
+             Cypher Completion Contributor
+             Provides keyword and schema-aware code completion for .cypher files.
+             ==================================================================== -->
+        <completion.contributor language="Cypher"
+            implementationClass="com.graphdbplugin.language.completion.CypherCompletionContributor"/>
+
+        <!-- ====================================================================
+             Cypher Completion Confidence
+             Enables auto-popup (typing-triggered) completion for Cypher files,
+             suppressing the popup only inside string literals and comments.
+             ==================================================================== -->
+        <completion.confidence language="Cypher"
+            implementationClass="com.graphdbplugin.language.completion.CypherCompletionConfidence"/>
+
+        <!-- ====================================================================
+             Cypher Commenter
+             Enables Ctrl+/ (line comment with //) and Ctrl+Shift+/
+             (block comment with /* */) in Cypher editor buffers.
+             ==================================================================== -->
+        <lang.commenter language="Cypher"
+            implementationClass="com.graphdbplugin.language.CypherCommenter"/>
+
+        <!-- ====================================================================
+             File Editor Provider for Cypher Virtual Files
+             Creates a CypherFileEditor whenever a CypherVirtualFile is opened,
+             and hides the default text editor to avoid duplication.
+             ==================================================================== -->
+        <fileEditorProvider
+            implementationClass="com.graphdbplugin.editor.CypherEditorProvider"/>
+
+        <!-- ====================================================================
+             Result tool window — shown at the bottom after query execution.
+             Hosts QueryLogPanel, GraphVisualizationPanel, TableResultPanel,
+             and ParametersPanel in a four-tab JBTabbedPane.
+             doNotActivateOnStart: the window is shown programmatically by
+             ResultToolWindowManager.displayResult when the first result arrives.
+             ==================================================================== -->
+        <toolWindow
+            id="GraphDB Results"
+            anchor="bottom"
+            icon="/icons/graphdb.svg"
+            factoryClass="com.graphdbplugin.results.ResultToolWindowFactory"
+            doNotActivateOnStart="true"/>
+
+        <!-- ====================================================================
+             Project-Level Service: ResultToolWindowManager
+             Bridges QueryExecutor results to the ResultPanel UI. Holds a
+             reference to the ResultPanel once it is created by the factory
+             and exposes displayResult() for use by RunQueryAction.
+             ==================================================================== -->
+        <projectService
+            serviceInterface="com.graphdbplugin.results.ResultToolWindowManager"
+            serviceImplementation="com.graphdbplugin.results.ResultToolWindowManager"/>
+
+        <!-- Cypher annotator — provides real-time error highlighting in the editor -->
+        <annotator
+            language="Cypher"
+            implementationClass="com.graphdbplugin.language.annotation.CypherAnnotator"/>
+
+    </extensions>
+
+    <!-- ========================================================================
+         Actions
+         Declares the data-source management actions that appear both in the
+         tool-window toolbar and (optionally) in the main menu / context menu.
+         ======================================================================== -->
+    <actions>
+
+        <!-- Action group that owns all data-source CRUD actions.
+             This group is added to the tool-window toolbar programmatically
+             by DataSourceTreePanel via ActionToolbar. -->
+        <group
+            id="GraphDB.DataSourceActions"
+            text="Data Source Actions"
+            description="Actions for managing GraphDB data sources"
+            popup="false">
+
+            <!-- Add a new Bolt data source -->
+            <action
+                id="GraphDB.AddDataSource"
+                class="com.graphdbplugin.actions.AddDataSourceAction"
+                text="Add Data Source"
+                description="Add a new Neo4j/Bolt data source"
+                icon="AllIcons.General.Add"/>
+
+            <!-- Edit the currently selected data source -->
+            <action
+                id="GraphDB.EditDataSource"
+                class="com.graphdbplugin.actions.EditDataSourceAction"
+                text="Edit Data Source"
+                description="Edit the selected Neo4j/Bolt data source"
+                icon="AllIcons.Actions.Edit"/>
+
+            <!-- Delete the currently selected data source -->
+            <action
+                id="GraphDB.DeleteDataSource"
+                class="com.graphdbplugin.actions.DeleteDataSourceAction"
+                text="Delete Data Source"
+                description="Delete the selected Neo4j/Bolt data source"
+                icon="AllIcons.General.Remove"/>
+
+            <!-- Execute the Cypher query in the currently focused editor tab -->
+            <action
+                id="GraphDB.RunQuery"
+                class="com.graphdbplugin.actions.RunQueryAction"
+                text="Run Query"
+                description="Execute the Cypher query against the selected data source"
+                icon="AllIcons.Actions.Execute">
+                <keyboard-shortcut first-keystroke="control F5" keymap="$default"/>
+                <keyboard-shortcut first-keystroke="meta F5"    keymap="Mac OS X 10.5+"/>
+            </action>
+
+        </group>
+
+    </actions>
+
+    <!-- ========================================================================
+         Application Listeners
+         Register application-level lifecycle listeners.
+         ======================================================================== -->
+    <applicationListeners>
+        <listener class="com.graphdbplugin.lifecycle.GraphDbApplicationLifecycle"
+                  topic="com.intellij.ide.AppLifecycleListener"/>
+    </applicationListeners>
+
+</idea-plugin>
