@@ -14,7 +14,7 @@
          ======================================================================== -->
     <id>com.graphdbplugin</id>
     <name>GraphDB for Neo4j</name>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 
     <!-- ========================================================================
          Vendor Information
@@ -83,6 +83,12 @@
          Change Notes — shown in the Marketplace version history.
          ======================================================================== -->
     <change-notes><![CDATA[
+        <b>1.4.1</b>
+        <ul>
+            <li>Updated Marketplace listing: vendor details, full plugin description covering
+                all current features, issue/feature-request link, and plugin icon.</li>
+            <li>Added CI/CD workflow to publish automatically to JetBrains Marketplace on release.</li>
+        </ul>
         <b>1.4.0</b>
         <ul>
             <li>Fixed URL validation to accept TLS-scheme URLs (<code>bolt+s://</code>,
