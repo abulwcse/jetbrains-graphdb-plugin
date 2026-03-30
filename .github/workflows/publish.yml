@@ -16,6 +16,9 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      - name: Point Gradle at the CI JDK
+        run: echo "org.gradle.java.home=$JAVA_HOME" >> gradle.properties
+
       - name: Build plugin
         run: ./gradlew buildPlugin
 
