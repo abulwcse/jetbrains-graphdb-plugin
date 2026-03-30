@@ -19,8 +19,8 @@
     <!-- ========================================================================
          Vendor Information
          ======================================================================== -->
-    <vendor url="https://github.com/graphdb-plugin" email="support@graphdbplugin.com">
-        GraphDB Plugin Contributors
+    <vendor url="https://github.com/abulwcse" email="abul.cse@gmail.com">
+        Abul Hassan Anwar Hussin
     </vendor>
 
     <!-- ========================================================================
@@ -29,31 +29,54 @@
          Must be valid HTML.
          ======================================================================== -->
     <description><![CDATA[
-        <h2>GraphDB Plugin — Neo4j / Bolt Database Manager for JetBrains IDEs</h2>
+        <h2>GraphDB for Neo4j — Neo4j / Bolt Database Manager for JetBrains IDEs</h2>
         <p>
-            Manage Neo4j graph databases directly inside your favourite JetBrains IDE.
-            Connect via the Bolt protocol, browse nodes and relationships, execute Cypher
-            queries with syntax highlighting and auto-completion, and visualise results as
-            an interactive graph canvas.
+            <b>GraphDB for Neo4j</b> brings Neo4j graph database tooling directly into your JetBrains IDE.
+            Connect to any Neo4j instance via the Bolt protocol, write and execute Cypher queries with
+            full language support, and explore results as an interactive graph canvas or a data table —
+            without leaving your editor.
         </p>
-        <h3>Phase 1 Features (this release)</h3>
+
+        <h3>What you can do today</h3>
         <ul>
-            <li>Add, edit and delete Bolt data sources with per-source colour coding</li>
-            <li>Credentials stored securely in the OS keychain via IDE PasswordSafe</li>
-            <li>Test-Connection button with live feedback in the data-source dialog</li>
-            <li>Persistent data-source list (survives IDE restarts)</li>
+            <li><b>Data source management</b> — add, edit and delete Bolt connections with per-source colour coding;
+                supports all URL schemes (<code>bolt://</code>, <code>bolt+s://</code>, <code>neo4j://</code>,
+                <code>neo4j+s://</code>, etc.)</li>
+            <li><b>Secure credentials</b> — passwords are stored in the OS keychain via the IDE's built-in
+                PasswordSafe; never written to disk in plain text</li>
+            <li><b>Test Connection</b> — verify connectivity (including SSL and named databases) before saving</li>
+            <li><b>Persistent data sources</b> — your connections survive IDE restarts</li>
+            <li><b>Cypher editor</b> — dedicated <code>.cypher</code> / <code>.cql</code> file type with syntax
+                highlighting (keywords, functions, operators, strings, comments), auto-completion, live error
+                annotations, and <code>//</code> / <code>/* */</code> commenting shortcuts</li>
+            <li><b>Run queries</b> — execute with <code>Ctrl+F5</code> (Windows/Linux) or <code>Cmd+F5</code>
+                (macOS) against the selected data source and target database</li>
+            <li><b>Graph visualisation</b> — interactive force-directed canvas; scroll to pan,
+                <code>Ctrl+scroll</code> to zoom, drag to reposition, double-click a node to inspect
+                all its properties; colour-coded legend by node label</li>
+            <li><b>Table view</b> — raw rows and columns for scalar and list results</li>
+            <li><b>Query log</b> — terminal-style history of every query run in the session</li>
+            <li><b>Parameters panel</b> — set named <code>$param</code> values as JSON before running</li>
         </ul>
-        <h3>Planned Features (upcoming phases)</h3>
+
+        <h3>Planned for upcoming releases</h3>
         <ul>
-            <li>Cypher query editor with syntax highlighting, completion and live linting</li>
-            <li>Results table and interactive graph-canvas visualisation</li>
-            <li>Schema browser — labels, relationship types, property keys, indexes</li>
-            <li>Query history and favourite queries</li>
-            <li>Export results as CSV / JSON</li>
+            <li>Schema browser — explore labels, relationship types, property keys and indexes live from
+                the connected database</li>
+            <li>Query history and saved/favourite queries</li>
+            <li>Export results as CSV or JSON</li>
+            <li>Multi-statement execution and transaction control</li>
+            <li>Expanded IDE compatibility (WebStorm, PyCharm, Rider, …)</li>
         </ul>
+
+        <h3>Bugs and feature requests</h3>
         <p>
-            Requires IntelliJ IDEA 2024.3 or later and a running Neo4j 5.x instance.
+            Please open an issue or start a discussion on
+            <a href="https://github.com/abulwcse/graphdb-plugin">GitHub</a>.
+            Include your IDE version, plugin version, and steps to reproduce for bug reports.
         </p>
+
+        <p><i>Requires IntelliJ IDEA 2024.3 or later and a running Neo4j 5.x instance.</i></p>
     ]]></description>
 
     <!-- ========================================================================
