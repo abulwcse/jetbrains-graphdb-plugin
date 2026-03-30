@@ -92,8 +92,12 @@ object Neo4jConnectionPool {
             .withMaxConnectionPoolSize(5)
             .withConnectionTimeout(dataSource.connectionTimeoutSeconds.toLong(), TimeUnit.SECONDS)
             .apply {
-                if (dataSource.sslEnabled) withEncryption()
-                else withoutEncryption()
+                // +s / +ssc URL schemes embed TLS — the driver reads it from the URI and
+                // throws IllegalArgumentException if withEncryption/withoutEncryption is
+                // also set.  Only set explicit encryption for plain bolt:// / neo4j:// URLs.
+                if (!BoltDataSource.hasTlsScheme(dataSource.url)) {
+                    if (dataSource.sslEnabled) withEncryption() else withoutEncryption()
+                }
             }
             .withConnectionAcquisitionTimeout(30, TimeUnit.SECONDS)
             .build()

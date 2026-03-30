@@ -22,6 +22,7 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Config
 import org.neo4j.driver.GraphDatabase
+import org.neo4j.driver.SessionConfig
 import java.awt.BorderLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -302,9 +303,15 @@ class DataSourceTreePanel(private val project: Project) : JPanel(BorderLayout())
                 val config = Config.builder()
                     .withConnectionTimeout(ds.connectionTimeoutSeconds.toLong(), TimeUnit.SECONDS)
                     .withMaxConnectionPoolSize(1)
+                    .apply {
+                        if (!BoltDataSource.hasTlsScheme(ds.url)) {
+                            if (ds.sslEnabled) withEncryption() else withoutEncryption()
+                        }
+                    }
                     .build()
                 GraphDatabase.driver(ds.url, AuthTokens.basic(ds.username, password), config).use { driver ->
-                    driver.session().use { session -> session.run("RETURN 1").consume() }
+                    val sessionConfig = SessionConfig.builder().withDatabase(ds.database).build()
+                    driver.session(sessionConfig).use { session -> session.run("RETURN 1").consume() }
                 }
                 true
             } catch (_: Exception) {

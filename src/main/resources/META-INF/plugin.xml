@@ -14,7 +14,7 @@
          ======================================================================== -->
     <id>com.graphdbplugin</id>
     <name>GraphDB for Neo4j</name>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 
     <!-- ========================================================================
          Vendor Information
@@ -60,6 +60,16 @@
          Change Notes — shown in the Marketplace version history.
          ======================================================================== -->
     <change-notes><![CDATA[
+        <b>1.4.0</b>
+        <ul>
+            <li>Fixed URL validation to accept TLS-scheme URLs (<code>bolt+s://</code>,
+                <code>bolt+ssc://</code>, <code>neo4j+s://</code>, <code>neo4j+ssc://</code>).
+                Previously these were rejected by the "Add / Edit Data Source" dialog,
+                making it impossible to save SSL-enabled data sources.</li>
+            <li>Fixed connection-test in the tool window: the configured database is now
+                passed to the session, so the test accurately reflects connectivity to the
+                target database rather than always pinging the server's default database.</li>
+        </ul>
         <b>1.3.0</b>
         <ul>
             <li>Fixed <code>NoClassDefFoundError: CypherLanguage</code> crash when opening a Cypher

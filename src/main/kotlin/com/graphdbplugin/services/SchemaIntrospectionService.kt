@@ -160,6 +160,11 @@ class SchemaIntrospectionService(private val project: Project) {
                 val config = Config.builder()
                     .withConnectionTimeout(dataSource.connectionTimeoutSeconds.toLong(), TimeUnit.SECONDS)
                     .withMaxConnectionPoolSize(1)
+                    .apply {
+                        if (!BoltDataSource.hasTlsScheme(dataSource.url)) {
+                            if (dataSource.sslEnabled) withEncryption() else withoutEncryption()
+                        }
+                    }
                     .build()
 
                 GraphDatabase.driver(

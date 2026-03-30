@@ -202,8 +202,12 @@ class AddEditDataSourceDialog(
         if (url.isBlank()) {
             return ValidationInfo("URL is required.", urlField)
         }
-        if (!url.startsWith("bolt://") && !url.startsWith("neo4j://")) {
-            return ValidationInfo("URL must start with bolt:// or neo4j://.", urlField)
+        if (!url.startsWith("bolt://") && !url.startsWith("neo4j://") &&
+            !BoltDataSource.hasTlsScheme(url)) {
+            return ValidationInfo(
+                "URL must start with bolt://, bolt+s://, bolt+ssc://, neo4j://, neo4j+s://, or neo4j+ssc://.",
+                urlField
+            )
         }
         if (usernameField.text.isBlank()) {
             return ValidationInfo("Username is required.", usernameField)
@@ -365,8 +369,9 @@ class AddEditDataSourceDialog(
             val config = org.neo4j.driver.Config.builder()
                 .withConnectionTimeout(timeoutSec.toLong(), java.util.concurrent.TimeUnit.SECONDS)
                 .apply {
-                    if (ssl) withEncryption()
-                    else withoutEncryption()
+                    if (!BoltDataSource.hasTlsScheme(url)) {
+                        if (ssl) withEncryption() else withoutEncryption()
+                    }
                 }
                 .build()
             val authToken = org.neo4j.driver.AuthTokens.basic(username, password)

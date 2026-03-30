@@ -84,6 +84,19 @@ data class BoltDataSource(
          * The list is ordered to give a visually pleasing left-to-right gradient
          * from cool blues through warm reds and finally neutral pink/magenta.
          */
+        /**
+         * Returns `true` if [url] uses a TLS-bearing scheme (`bolt+s://`, `neo4j+s://`,
+         * `bolt+ssc://`, or `neo4j+ssc://`).
+         *
+         * When the scheme already encodes TLS, the Neo4j Java driver infers the encryption
+         * settings from the URI and must **not** receive an explicit
+         * `Config.withEncryption()` / `withoutEncryption()` call — doing so throws
+         * `IllegalArgumentException`.  Use this flag to guard those calls.
+         */
+        fun hasTlsScheme(url: String): Boolean =
+            url.startsWith("bolt+s://") || url.startsWith("neo4j+s://") ||
+            url.startsWith("bolt+ssc://") || url.startsWith("neo4j+ssc://")
+
         val COLOR_PALETTE: List<String> = listOf(
             "#4A90D9", // blue (default)
             "#27AE60", // green

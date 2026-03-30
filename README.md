@@ -6,7 +6,7 @@ Write Cypher, manage connections, run queries, and explore results as a graph or
 > **Found a bug or have a suggestion?**
 > [Open an issue on GitHub](https://github.com/abulwcse/jetbrains-graphdb-plugin/issues/new) — it's the fastest way to get it resolved.
 
----
+---n
 ## Features
 
 | | |
