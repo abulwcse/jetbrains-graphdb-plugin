@@ -99,21 +99,12 @@ intellijPlatform {
     signing {
         // Signing is required for JetBrains Marketplace publication.
         // Provide these environment variables in CI / publish workflow:
-        //   CERTIFICATE_CHAIN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD
-        certificateChainFile = providers.environmentVariable("CERTIFICATE_CHAIN")
-            .map { file(it) }
-            .orElse(provider { null })
-            .orNull
-            ?.let { file(it) }
-
-        privateKeyFile = providers.environmentVariable("PRIVATE_KEY")
-            .map { file(it) }
-            .orElse(provider { null })
-            .orNull
-            ?.let { file(it) }
-
-        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
-            .orElse("")
+        //   CERTIFICATE_CHAIN  — PEM content of the certificate chain
+        //   PRIVATE_KEY        — PEM content of the private key
+        //   PRIVATE_KEY_PASSWORD — passphrase (empty string if key is unencrypted)
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN").orElse("")
+        privateKey        = providers.environmentVariable("PRIVATE_KEY").orElse("")
+        password          = providers.environmentVariable("PRIVATE_KEY_PASSWORD").orElse("")
     }
 
     publishing {
