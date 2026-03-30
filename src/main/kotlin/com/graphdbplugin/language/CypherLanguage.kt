@@ -5,17 +5,21 @@ import com.intellij.lang.Language
 /**
  * Singleton language definition for the Cypher query language.
  *
- * This object serves as the authoritative identifier for the Cypher language
- * throughout all IntelliJ Platform APIs. It is referenced by:
- * - [CypherFileType] to bind the language to file extensions
- * - [com.graphdbplugin.language.parser.CypherParserDefinition] as the parser's language
- * - [com.graphdbplugin.language.highlighting.CypherSyntaxHighlighterFactory] for token colouring
- * - All PSI element types via [CypherTokenTypes] and [com.graphdbplugin.language.psi.CypherElementType]
+ * Declared as a `class` (not a Kotlin `object`) so that [INSTANCE] is initialised
+ * eagerly in the companion-object static initialiser when the class is first loaded
+ * by the JVM. This guarantees that the `Language("Cypher")` constructor — which
+ * registers the language with the IntelliJ Platform — runs at class-load time rather
+ * than on first access from an arbitrary thread, avoiding the race condition
+ * introduced in IntelliJ Platform build 261 (GoLand / IDEA 2026.1).
  *
- * The string identifier `"Cypher"` passed to the [Language] constructor must match the
- * `language` attribute used in `plugin.xml` extension-point registrations.
+ * [CypherFileType] is declared in `plugin.xml` with `fieldName="INSTANCE"`, which
+ * causes the platform to access `CypherFileType.INSTANCE` during its file-type
+ * initialisation phase. That access loads [CypherFileType], whose constructor calls
+ * `LanguageFileType(CypherLanguage.INSTANCE)`, which in turn loads this class and
+ * fires the static initialiser — all on the main thread, well within the safe
+ * registration window.
  */
-object CypherLanguage : Language("Cypher") {
+class CypherLanguage private constructor() : Language("Cypher") {
 
     /**
      * Returns the human-readable display name shown in IDE UI elements such as
@@ -24,4 +28,10 @@ object CypherLanguage : Language("Cypher") {
      * @return The string `"Cypher"`.
      */
     override fun getDisplayName() = "Cypher"
+
+    companion object {
+        /** The single [CypherLanguage] instance. Always use this; never instantiate directly. */
+        @JvmField
+        val INSTANCE: CypherLanguage = CypherLanguage()
+    }
 }

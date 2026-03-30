@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x /Users/abulhassan/Workspace/jetBrains-GraphDb-Plugin/gradlew)",
+      "Bash(xxd)",
+      "Bash(./gradlew runIde 2>&1)",
+      "Bash(gradle --version)",
+      "Bash(brew list:*)",
+      "Read(//opt/homebrew/opt/**)",
+      "Read(//usr/local/**)",
+      "Bash(java -version)",
+      "Bash(curl -fsSL -o /Users/abulhassan/Workspace/jetBrains-GraphDb-Plugin/gradle/wrapper/gradle-wrapper.jar \"https://github.com/gradle/gradle/raw/v8.12.1/gradle/wrapper/gradle-wrapper.jar\")",
+      "Bash(./gradlew tasks:*)",
+      "Bash(/usr/libexec/java_home -V)",
+      "Read(//Library/Java/JavaVirtualMachines/**)",
+      "Bash(curl -fsSL -o /Users/abulhassan/Workspace/jetBrains-GraphDb-Plugin/gradle/wrapper/gradle-wrapper.jar \"https://github.com/gradle/gradle/raw/v8.13.0/gradle/wrapper/gradle-wrapper.jar\")",
+      "Bash(brew install:*)",
+      "Bash(JDK21=\"/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home\" JAVA_HOME=$JDK21 ./gradlew tasks --no-daemon)",
+      "Bash(./gradlew runIde --no-daemon 2>&1)",
+      "Bash(./gradlew compileKotlin --no-daemon)",
+      "Bash(./gradlew clean:*)",
+      "Bash(./gradlew compileKotlin)",
+      "Bash(pkill -f \"idea-sandbox\")",
+      "Bash(pkill -f \"runIde\")",
+      "Bash(./gradlew buildPlugin 2>&1)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh release:*)"
+    ]
+  }
+}
