@@ -26,7 +26,7 @@ import com.intellij.psi.FileViewProvider
  *
  * @param viewProvider The [FileViewProvider] that maps virtual-file content to PSI.
  */
-class CypherFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, CypherLanguage) {
+class CypherFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, CypherLanguage.INSTANCE) {
 
     /**
      * Returns the [CypherFileType] descriptor associated with this file.

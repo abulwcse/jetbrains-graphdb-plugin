@@ -16,4 +16,4 @@ import com.intellij.psi.tree.IElementType
  * @param debugName The human-readable name for this element type, used in debug
  *                  output and the PSI viewer. Must be unique among Cypher element types.
  */
-open class CypherElementType(debugName: String) : IElementType(debugName, CypherLanguage)
+open class CypherElementType(debugName: String) : IElementType(debugName, CypherLanguage.INSTANCE)

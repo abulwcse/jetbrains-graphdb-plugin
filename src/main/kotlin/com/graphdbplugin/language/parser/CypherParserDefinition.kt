@@ -52,11 +52,8 @@ class CypherParserDefinition : ParserDefinition {
          * All other PSI nodes are descendants of a node of this type.
          * Declared as a companion constant so it can be referenced from
          * [CypherFile] and other places without creating a [CypherParserDefinition] instance.
-         *
-         * Lazy to avoid touching [CypherLanguage] at class-load time (see
-         * [com.graphdbplugin.lifecycle.CypherLanguageEagerLoader] for context).
          */
-        val FILE_ELEMENT_TYPE: IFileElementType by lazy { IFileElementType(CypherLanguage) }
+        val FILE_ELEMENT_TYPE: IFileElementType by lazy { IFileElementType(CypherLanguage.INSTANCE) }
 
         /** Token set for whitespace tokens — used by the platform to skip insignificant gaps. */
         val WHITESPACE_TOKENS: TokenSet by lazy { TokenSet.create(CypherTokenTypes.WHITESPACE) }

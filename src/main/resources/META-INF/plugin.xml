@@ -14,7 +14,7 @@
          ======================================================================== -->
     <id>com.graphdbplugin</id>
     <name>GraphDB for Neo4j</name>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
 
     <!-- ========================================================================
          Vendor Information
@@ -83,6 +83,14 @@
          Change Notes — shown in the Marketplace version history.
          ======================================================================== -->
     <change-notes><![CDATA[
+        <b>1.4.3</b>
+        <ul>
+            <li>Removed use of internal API <code>ApplicationInitializedListener</code>.
+                <code>CypherLanguage</code> is now a plain class whose singleton instance is
+                initialised eagerly in a companion-object static initialiser, guaranteeing
+                language registration on the main thread at class-load time without relying
+                on any internal platform hooks. GoLand 2026.1 compatibility is preserved.</li>
+        </ul>
         <b>1.4.2</b>
         <ul>
             <li>Fixed CI/CD publish workflow failing on Ubuntu runner due to macOS-specific
@@ -357,13 +365,6 @@
          Register application-level lifecycle listeners.
          ======================================================================== -->
     <applicationListeners>
-        <!-- Eagerly registers CypherLanguage during the platform initialisation
-             window so that lazy Kotlin object access from background threads or
-             the file-type manager cannot miss the registration deadline introduced
-             in IntelliJ Platform 261 (GoLand / IDEA 2026.1). -->
-        <listener class="com.graphdbplugin.lifecycle.CypherLanguageEagerLoader"
-                  topic="com.intellij.ide.ApplicationInitializedListener"/>
-
         <listener class="com.graphdbplugin.lifecycle.GraphDbApplicationLifecycle"
                   topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>

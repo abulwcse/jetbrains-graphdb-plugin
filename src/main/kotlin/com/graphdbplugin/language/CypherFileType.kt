@@ -28,7 +28,7 @@ import javax.swing.Icon
  * This class extends [LanguageFileType] and therefore binds itself to [CypherLanguage]
  * so that the platform can route PSI-related operations to the correct language support.
  */
-class CypherFileType private constructor() : LanguageFileType(CypherLanguage) {
+class CypherFileType private constructor() : LanguageFileType(CypherLanguage.INSTANCE) {
 
     /**
      * Returns the unique internal name of this file type.
