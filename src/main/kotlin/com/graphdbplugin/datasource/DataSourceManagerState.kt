@@ -34,5 +34,5 @@ class DataSourceManagerState {
      * [DataSourceManager.addDataSource]. The order in the list matches the
      * display order in the tool-window tree.
      */
-    val dataSources: MutableList<BoltDataSource> = mutableListOf()
+    var dataSources: MutableList<BoltDataSource> = mutableListOf()
 }

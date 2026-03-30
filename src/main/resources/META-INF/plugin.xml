@@ -14,7 +14,7 @@
          ======================================================================== -->
     <id>com.graphdbplugin</id>
     <name>GraphDB for Neo4j</name>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 
     <!-- ========================================================================
          Vendor Information
@@ -60,6 +60,20 @@
          Change Notes — shown in the Marketplace version history.
          ======================================================================== -->
     <change-notes><![CDATA[
+        <b>1.3.0</b>
+        <ul>
+            <li>Fixed <code>NoClassDefFoundError: CypherLanguage</code> crash when opening a Cypher
+                editor in GoLand 2026.1 (build 261). The IntelliJ Platform 261 tightened
+                language-registration timing; CypherLanguage is now eagerly registered at
+                application startup via <code>ApplicationInitializedListener</code>.</li>
+            <li>All token-type, composite-element-type and parser-companion fields that
+                reference CypherLanguage are now lazily initialised, eliminating the
+                premature class-load race that caused the crash.</li>
+            <li>Fixed data-source persistence: multiple data sources now survive IDE
+                restarts (<code>DataSourceManagerState.dataSources</code> changed to
+                <code>var</code>; <code>BoltDataSource.name</code> given a default value
+                to support XML deserialisation).</li>
+        </ul>
         <b>1.2.0</b>
         <ul>
             <li>Extended IDE compatibility to cover GoLand 2026.1 (build 261).</li>
@@ -299,6 +313,13 @@
          Register application-level lifecycle listeners.
          ======================================================================== -->
     <applicationListeners>
+        <!-- Eagerly registers CypherLanguage during the platform initialisation
+             window so that lazy Kotlin object access from background threads or
+             the file-type manager cannot miss the registration deadline introduced
+             in IntelliJ Platform 261 (GoLand / IDEA 2026.1). -->
+        <listener class="com.graphdbplugin.lifecycle.CypherLanguageEagerLoader"
+                  topic="com.intellij.ide.ApplicationInitializedListener"/>
+
         <listener class="com.graphdbplugin.lifecycle.GraphDbApplicationLifecycle"
                   topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>

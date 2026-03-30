@@ -21,48 +21,48 @@ package com.graphdbplugin.language.psi
 object CypherCompositeElementTypes {
 
     /** Root file node; wraps the entire content of a `.cypher` file. */
-    val FILE = CypherElementType("FILE")
+    val FILE by lazy { CypherElementType("FILE") }
 
     /**
      * A single complete Cypher statement, i.e. a sequence of clauses optionally
      * terminated by a semicolon. Reserved for Phase 5 full-grammar parsing.
      */
-    val STATEMENT = CypherElementType("STATEMENT")
+    val STATEMENT by lazy { CypherElementType("STATEMENT") }
 
     /**
      * A generic clause node used as a common supertype for more specific clause
      * types below. Reserved for Phase 5.
      */
-    val CLAUSE = CypherElementType("CLAUSE")
+    val CLAUSE by lazy { CypherElementType("CLAUSE") }
 
     /**
      * A `MATCH` clause, e.g. `MATCH (n:Person)`. Reserved for Phase 5.
      */
-    val MATCH_CLAUSE = CypherElementType("MATCH_CLAUSE")
+    val MATCH_CLAUSE by lazy { CypherElementType("MATCH_CLAUSE") }
 
     /**
      * A `RETURN` clause, e.g. `RETURN n.name`. Reserved for Phase 5.
      */
-    val RETURN_CLAUSE = CypherElementType("RETURN_CLAUSE")
+    val RETURN_CLAUSE by lazy { CypherElementType("RETURN_CLAUSE") }
 
     /**
      * A `WITH` clause used to pipe results between query parts. Reserved for Phase 5.
      */
-    val WITH_CLAUSE = CypherElementType("WITH_CLAUSE")
+    val WITH_CLAUSE by lazy { CypherElementType("WITH_CLAUSE") }
 
     /**
      * A `CREATE` clause, e.g. `CREATE (n:Person {name: 'Alice'})`. Reserved for Phase 5.
      */
-    val CREATE_CLAUSE = CypherElementType("CREATE_CLAUSE")
+    val CREATE_CLAUSE by lazy { CypherElementType("CREATE_CLAUSE") }
 
     /**
      * A `WHERE` clause, e.g. `WHERE n.age > 30`. Reserved for Phase 5.
      */
-    val WHERE_CLAUSE = CypherElementType("WHERE_CLAUSE")
+    val WHERE_CLAUSE by lazy { CypherElementType("WHERE_CLAUSE") }
 
     /**
      * A generic expression node covering comparisons, arithmetic, function calls,
      * literals, and identifiers. Reserved for Phase 5.
      */
-    val EXPRESSION = CypherElementType("EXPRESSION")
+    val EXPRESSION by lazy { CypherElementType("EXPRESSION") }
 }

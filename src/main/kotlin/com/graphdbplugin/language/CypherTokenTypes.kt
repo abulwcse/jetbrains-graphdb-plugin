@@ -12,6 +12,18 @@ import com.intellij.psi.tree.IElementType
  * [CypherLanguage] so the platform can distinguish Cypher tokens from those of
  * other languages in mixed-language files.
  *
+ * ### Lazy initialisation
+ * Every [IElementType] that references [CypherLanguage] is declared with `by lazy`
+ * so that the `IElementType` registry entry is not created until the token type is
+ * first accessed.  This prevents [CypherLanguage] from being touched during Kotlin
+ * object initialisation (which happens at class-load time), which would risk
+ * triggering [CypherLanguage]'s `Language("Cypher")` constructor before the
+ * IntelliJ Platform's language-registration window is open (a timing issue
+ * introduced in build 261 / GoLand 2026.1).
+ *
+ * [WHITESPACE] and [BAD_CHARACTER] delegate to platform-shared constants and do
+ * not reference [CypherLanguage], so they are left as plain properties.
+ *
  * ### Categories
  * - **Structural** — parentheses, brackets, braces, punctuation
  * - **Arrows** — relationship arrow tokens used in pattern matching
@@ -31,115 +43,115 @@ object CypherTokenTypes {
     // -------------------------------------------------------------------------
 
     /** Opening round parenthesis `(`. Used in node patterns and expressions. */
-    val LPAREN = IElementType("LPAREN", CypherLanguage)
+    val LPAREN by lazy { IElementType("LPAREN", CypherLanguage) }
 
     /** Closing round parenthesis `)`. */
-    val RPAREN = IElementType("RPAREN", CypherLanguage)
+    val RPAREN by lazy { IElementType("RPAREN", CypherLanguage) }
 
     /** Opening square bracket `[`. Used in relationship patterns and list literals. */
-    val LBRACKET = IElementType("LBRACKET", CypherLanguage)
+    val LBRACKET by lazy { IElementType("LBRACKET", CypherLanguage) }
 
     /** Closing square bracket `]`. */
-    val RBRACKET = IElementType("RBRACKET", CypherLanguage)
+    val RBRACKET by lazy { IElementType("RBRACKET", CypherLanguage) }
 
     /** Opening curly brace `{`. Used in map literals and property constraints. */
-    val LBRACE = IElementType("LBRACE", CypherLanguage)
+    val LBRACE by lazy { IElementType("LBRACE", CypherLanguage) }
 
     /** Closing curly brace `}`. */
-    val RBRACE = IElementType("RBRACE", CypherLanguage)
+    val RBRACE by lazy { IElementType("RBRACE", CypherLanguage) }
 
     /** Comma `,`. Separates items in lists, return expressions, etc. */
-    val COMMA = IElementType("COMMA", CypherLanguage)
+    val COMMA by lazy { IElementType("COMMA", CypherLanguage) }
 
     /** Colon `:`. Used in label declarations (`(n:Person)`) and map literals. */
-    val COLON = IElementType("COLON", CypherLanguage)
+    val COLON by lazy { IElementType("COLON", CypherLanguage) }
 
     /** Full stop `.`. Used in property access (`n.name`). */
-    val DOT = IElementType("DOT", CypherLanguage)
+    val DOT by lazy { IElementType("DOT", CypherLanguage) }
 
     /** Semicolon `;`. Optional statement terminator in multi-statement scripts. */
-    val SEMICOLON = IElementType("SEMICOLON", CypherLanguage)
+    val SEMICOLON by lazy { IElementType("SEMICOLON", CypherLanguage) }
 
     /** Pipe `|`. Used in list comprehensions and `CASE` alternatives. */
-    val PIPE = IElementType("PIPE", CypherLanguage)
+    val PIPE by lazy { IElementType("PIPE", CypherLanguage) }
 
     /** Asterisk `*`. Wildcard in `RETURN *` and hop-count ranges `[*1..5]`. */
-    val ASTERISK = IElementType("ASTERISK", CypherLanguage)
+    val ASTERISK by lazy { IElementType("ASTERISK", CypherLanguage) }
 
     // -------------------------------------------------------------------------
     // Arrow tokens
     // -------------------------------------------------------------------------
 
     /** Right-directed relationship arrow `->`. Indicates outgoing direction. */
-    val ARROW_RIGHT = IElementType("ARROW_RIGHT", CypherLanguage)
+    val ARROW_RIGHT by lazy { IElementType("ARROW_RIGHT", CypherLanguage) }
 
     /** Left-directed relationship arrow `<-`. Indicates incoming direction. */
-    val ARROW_LEFT = IElementType("ARROW_LEFT", CypherLanguage)
+    val ARROW_LEFT by lazy { IElementType("ARROW_LEFT", CypherLanguage) }
 
     /** Single dash `-`. Used as the undirected relationship connector. */
-    val DASH = IElementType("DASH", CypherLanguage)
+    val DASH by lazy { IElementType("DASH", CypherLanguage) }
 
     // -------------------------------------------------------------------------
     // Operator tokens
     // -------------------------------------------------------------------------
 
     /** Equality operator `=`. */
-    val EQ = IElementType("EQ", CypherLanguage)
+    val EQ by lazy { IElementType("EQ", CypherLanguage) }
 
     /** Inequality operator `<>`. */
-    val NEQ = IElementType("NEQ", CypherLanguage)
+    val NEQ by lazy { IElementType("NEQ", CypherLanguage) }
 
     /** Less-than operator `<`. */
-    val LT = IElementType("LT", CypherLanguage)
+    val LT by lazy { IElementType("LT", CypherLanguage) }
 
     /** Greater-than operator `>`. */
-    val GT = IElementType("GT", CypherLanguage)
+    val GT by lazy { IElementType("GT", CypherLanguage) }
 
     /** Less-than-or-equal operator `<=`. */
-    val LTE = IElementType("LTE", CypherLanguage)
+    val LTE by lazy { IElementType("LTE", CypherLanguage) }
 
     /** Greater-than-or-equal operator `>=`. */
-    val GTE = IElementType("GTE", CypherLanguage)
+    val GTE by lazy { IElementType("GTE", CypherLanguage) }
 
     /** Addition operator `+`. Also used for string concatenation. */
-    val PLUS = IElementType("PLUS", CypherLanguage)
+    val PLUS by lazy { IElementType("PLUS", CypherLanguage) }
 
     /** Subtraction operator `-`. Shared with [DASH] context — resolved at parse time. */
-    val MINUS = IElementType("MINUS", CypherLanguage)
+    val MINUS by lazy { IElementType("MINUS", CypherLanguage) }
 
     /** Division operator `/`. */
-    val SLASH = IElementType("SLASH", CypherLanguage)
+    val SLASH by lazy { IElementType("SLASH", CypherLanguage) }
 
     /** Modulus operator `%`. */
-    val PERCENT = IElementType("PERCENT", CypherLanguage)
+    val PERCENT by lazy { IElementType("PERCENT", CypherLanguage) }
 
     /** Exponentiation operator `^`. */
-    val CARET = IElementType("CARET", CypherLanguage)
+    val CARET by lazy { IElementType("CARET", CypherLanguage) }
 
     /** Regular expression match operator `=~`. */
-    val TILDE_EQ = IElementType("TILDE_EQ", CypherLanguage)
+    val TILDE_EQ by lazy { IElementType("TILDE_EQ", CypherLanguage) }
 
     // -------------------------------------------------------------------------
     // Literal tokens
     // -------------------------------------------------------------------------
 
     /** Single-quoted or double-quoted string literal, e.g. `'Alice'` or `"Bob"`. */
-    val STRING_LITERAL = IElementType("STRING_LITERAL", CypherLanguage)
+    val STRING_LITERAL by lazy { IElementType("STRING_LITERAL", CypherLanguage) }
 
     /** Integer literal, e.g. `42` or `0`. */
-    val INTEGER_LITERAL = IElementType("INTEGER_LITERAL", CypherLanguage)
+    val INTEGER_LITERAL by lazy { IElementType("INTEGER_LITERAL", CypherLanguage) }
 
     /** Floating-point literal, e.g. `3.14` or `1.5e10`. */
-    val FLOAT_LITERAL = IElementType("FLOAT_LITERAL", CypherLanguage)
+    val FLOAT_LITERAL by lazy { IElementType("FLOAT_LITERAL", CypherLanguage) }
 
     /** The literal `true` (case-insensitive). */
-    val TRUE_LITERAL = IElementType("TRUE_LITERAL", CypherLanguage)
+    val TRUE_LITERAL by lazy { IElementType("TRUE_LITERAL", CypherLanguage) }
 
     /** The literal `false` (case-insensitive). */
-    val FALSE_LITERAL = IElementType("FALSE_LITERAL", CypherLanguage)
+    val FALSE_LITERAL by lazy { IElementType("FALSE_LITERAL", CypherLanguage) }
 
     /** The literal `null` (case-insensitive). */
-    val NULL_LITERAL = IElementType("NULL_LITERAL", CypherLanguage)
+    val NULL_LITERAL by lazy { IElementType("NULL_LITERAL", CypherLanguage) }
 
     // -------------------------------------------------------------------------
     // Identifiers and parameters
@@ -149,13 +161,13 @@ object CypherTokenTypes {
      * Plain identifier, e.g. `n`, `myNode`, or a backtick-quoted name `` `My Node` ``.
      * Identifiers that match a keyword are emitted as [KEYWORD] instead.
      */
-    val IDENTIFIER = IElementType("IDENTIFIER", CypherLanguage)
+    val IDENTIFIER by lazy { IElementType("IDENTIFIER", CypherLanguage) }
 
     /**
      * Query parameter, e.g. `$userId` or `$0`.
      * Includes the leading `$` character in the token text.
      */
-    val PARAM = IElementType("PARAM", CypherLanguage)
+    val PARAM by lazy { IElementType("PARAM", CypherLanguage) }
 
     // -------------------------------------------------------------------------
     // Keywords and function names
@@ -166,27 +178,27 @@ object CypherTokenTypes {
      * Case-insensitive: `match` and `MATCH` both produce a [KEYWORD] token.
      * The full set of keywords is defined in [CypherKeywords.KEYWORDS].
      */
-    val KEYWORD = IElementType("KEYWORD", CypherLanguage)
+    val KEYWORD by lazy { IElementType("KEYWORD", CypherLanguage) }
 
     /**
      * A built-in function name such as `count`, `collect`, `toLower`, etc.
      * Emitted instead of [IDENTIFIER] when the lexer recognises the name
      * (case-insensitively) in [CypherKeywords.FUNCTIONS].
      */
-    val FUNCTION_NAME = IElementType("FUNCTION_NAME", CypherLanguage)
+    val FUNCTION_NAME by lazy { IElementType("FUNCTION_NAME", CypherLanguage) }
 
     // -------------------------------------------------------------------------
     // Comments
     // -------------------------------------------------------------------------
 
     /** A line comment starting with `//` and running to the end of the line. */
-    val LINE_COMMENT = IElementType("LINE_COMMENT", CypherLanguage)
+    val LINE_COMMENT by lazy { IElementType("LINE_COMMENT", CypherLanguage) }
 
     /** A block comment delimited by `/*` and `*/`. May span multiple lines. */
-    val BLOCK_COMMENT = IElementType("BLOCK_COMMENT", CypherLanguage)
+    val BLOCK_COMMENT by lazy { IElementType("BLOCK_COMMENT", CypherLanguage) }
 
     // -------------------------------------------------------------------------
-    // Platform-shared token types
+    // Platform-shared token types (no CypherLanguage dependency — not lazy)
     // -------------------------------------------------------------------------
 
     /**

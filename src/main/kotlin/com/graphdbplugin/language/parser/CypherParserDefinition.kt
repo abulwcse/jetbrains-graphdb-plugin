@@ -52,24 +52,25 @@ class CypherParserDefinition : ParserDefinition {
          * All other PSI nodes are descendants of a node of this type.
          * Declared as a companion constant so it can be referenced from
          * [CypherFile] and other places without creating a [CypherParserDefinition] instance.
+         *
+         * Lazy to avoid touching [CypherLanguage] at class-load time (see
+         * [com.graphdbplugin.lifecycle.CypherLanguageEagerLoader] for context).
          */
-        @JvmField
-        val FILE_ELEMENT_TYPE: IFileElementType = IFileElementType(CypherLanguage)
+        val FILE_ELEMENT_TYPE: IFileElementType by lazy { IFileElementType(CypherLanguage) }
 
         /** Token set for whitespace tokens — used by the platform to skip insignificant gaps. */
-        @JvmField
-        val WHITESPACE_TOKENS: TokenSet = TokenSet.create(CypherTokenTypes.WHITESPACE)
+        val WHITESPACE_TOKENS: TokenSet by lazy { TokenSet.create(CypherTokenTypes.WHITESPACE) }
 
         /** Token set for comment tokens — used by the platform for comment-folding, etc. */
-        @JvmField
-        val COMMENT_TOKENS: TokenSet = TokenSet.create(
-            CypherTokenTypes.LINE_COMMENT,
-            CypherTokenTypes.BLOCK_COMMENT
-        )
+        val COMMENT_TOKENS: TokenSet by lazy {
+            TokenSet.create(
+                CypherTokenTypes.LINE_COMMENT,
+                CypherTokenTypes.BLOCK_COMMENT
+            )
+        }
 
         /** Token set for string-literal tokens — used by the platform's string-escape utilities. */
-        @JvmField
-        val STRING_TOKENS: TokenSet = TokenSet.create(CypherTokenTypes.STRING_LITERAL)
+        val STRING_TOKENS: TokenSet by lazy { TokenSet.create(CypherTokenTypes.STRING_LITERAL) }
     }
 
     /**
