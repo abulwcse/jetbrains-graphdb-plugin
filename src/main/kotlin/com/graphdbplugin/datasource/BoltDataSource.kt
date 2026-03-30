@@ -42,14 +42,14 @@ import java.util.UUID
  *                                 blue to match the plugin's icon palette.
  */
 data class BoltDataSource(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String = "",
-    val url: String = "bolt://localhost:7687",
-    val username: String = "neo4j",
-    val database: String = "neo4j",
-    val sslEnabled: Boolean = false,
-    val connectionTimeoutSeconds: Int = 30,
-    val color: String = "#4A90D9"
+    var id: String = UUID.randomUUID().toString(),
+    var name: String = "",
+    var url: String = "bolt://localhost:7687",
+    var username: String = "neo4j",
+    var database: String = "neo4j",
+    var sslEnabled: Boolean = false,
+    var connectionTimeoutSeconds: Int = 30,
+    var color: String = "#4A90D9"
 ) {
 
     companion object {
