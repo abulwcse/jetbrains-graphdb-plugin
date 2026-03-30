@@ -19,7 +19,7 @@
     <!-- ========================================================================
          Vendor Information
          ======================================================================== -->
-    <vendor url="https://github.com/abulwcse" email="abul.cse@gmail.com">
+    <vendor url="https://github.com/abulwcse/jetbrains-graphdb-plugin" email="abul.cse@gmail.com">
         Abul Hassan Anwar Hussin
     </vendor>
 
@@ -72,7 +72,7 @@
         <h3>Bugs and feature requests</h3>
         <p>
             Please open an issue or start a discussion on
-            <a href="https://github.com/abulwcse/graphdb-plugin">GitHub</a>.
+            <a href="https://github.com/abulwcse/jetbrains-graphdb-plugin/issues/new">GitHub</a>.
             Include your IDE version, plugin version, and steps to reproduce for bug reports.
         </p>
 
