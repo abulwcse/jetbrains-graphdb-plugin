@@ -19,3 +19,6 @@ idea-sandbox/
 
 # IntelliJ Platform Gradle Plugin cache (flagged by verifyPluginProjectConfiguration)
 .intellijPlatform/
+
+# Claude Code
+.claude/
