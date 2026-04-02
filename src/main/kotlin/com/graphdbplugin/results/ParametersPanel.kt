@@ -111,12 +111,13 @@ class ParametersPanel : JPanel(BorderLayout()) {
      * Returns the current parameter values as a typed map.
      *
      * Only fields with non-blank content are included. Values are parsed in order:
-     * Long → Double → Boolean → String.
+     * Long → Double → Boolean → null → String.
+     * Type `null` (case-insensitive) in a field to explicitly send a null value.
      *
-     * @return A [Map] of parameter name to typed value, ready to pass directly to
-     *         [com.graphdbplugin.execution.QueryExecutor.execute].
+     * @return A [Map] of parameter name to typed value (nullable), ready to pass
+     *         directly to [com.graphdbplugin.execution.QueryExecutor.execute].
      */
-    fun getParams(): Map<String, Any> =
+    fun getParams(): Map<String, Any?> =
         paramFields.entries
             .filter { (_, field) -> field.text.isNotBlank() }
             .associate { (name, field) -> name to parseValue(field.text.trim()) }
@@ -158,13 +159,14 @@ class ParametersPanel : JPanel(BorderLayout()) {
         wrapper.repaint()
     }
 
-    /** Parses [raw] to Long, Double, Boolean, or String — in that order. */
-    private fun parseValue(raw: String): Any =
+    /** Parses [raw] to Long, Double, Boolean, null, or String — in that order. */
+    private fun parseValue(raw: String): Any? =
         raw.toLongOrNull()
             ?: raw.toDoubleOrNull()
             ?: when (raw.lowercase()) {
                 "true"  -> true
                 "false" -> false
+                "null"  -> null
                 else    -> raw
             }
 

@@ -44,7 +44,7 @@ object QueryExecutor {
     fun execute(
         dataSource: BoltDataSource,
         queryText: String,
-        parameters: Map<String, Any> = emptyMap()
+        parameters: Map<String, Any?> = emptyMap()
     ): QueryResult {
         val startMs = System.currentTimeMillis()
         return try {

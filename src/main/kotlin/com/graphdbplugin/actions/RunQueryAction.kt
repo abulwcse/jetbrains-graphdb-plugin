@@ -101,7 +101,7 @@ class RunQueryAction : AnAction(
         val dataSource = cypherEditor.getSelectedDataSource()
 
         // 4. Read parameters directly from the dynamic Parameters panel
-        val params: Map<String, Any> = ResultToolWindowManager.getInstance(project).getParams()
+        val params: Map<String, Any?> = ResultToolWindowManager.getInstance(project).getParams()
 
         // 5. Notify user that execution has started
         NotificationGroupManager.getInstance()

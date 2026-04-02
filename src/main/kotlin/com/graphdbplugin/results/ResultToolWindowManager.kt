@@ -47,7 +47,7 @@ class ResultToolWindowManager(private val project: Project) {
      * Returns the current parameter values from the parameters panel.
      * Falls back to an empty map if the tool window has not been initialised yet.
      */
-    fun getParams(): Map<String, Any> = resultPanel?.getParams() ?: emptyMap()
+    fun getParams(): Map<String, Any?> = resultPanel?.getParams() ?: emptyMap()
 
     /**
      * Pushes a [QueryResult] to the UI and activates the result tool window.

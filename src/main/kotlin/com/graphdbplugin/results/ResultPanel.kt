@@ -88,5 +88,5 @@ class ResultPanel : JPanel(BorderLayout()) {
     fun syncQueryParams(queryText: String) = parametersPanel.syncWithQuery(queryText)
 
     /** Returns the current parameter values for use in query execution. */
-    fun getParams(): Map<String, Any> = parametersPanel.getParams()
+    fun getParams(): Map<String, Any?> = parametersPanel.getParams()
 }
