@@ -31,9 +31,8 @@ class QuerySummaryPanel : JPanel(BorderLayout()) {
     // ---- Query text display ----
     private val queryArea = JTextArea().apply {
         isEditable  = false
-        lineWrap    = true
-        wrapStyleWord = true
-        rows        = 3
+        lineWrap    = false
+        rows        = 1
         isOpaque    = false
         border      = JBUI.Borders.empty(4, 8, 2, 8)
         font        = Font(Font.MONOSPACED, Font.PLAIN, 12)
@@ -76,13 +75,13 @@ class QuerySummaryPanel : JPanel(BorderLayout()) {
 
         when (result) {
             is QueryResult.Success -> {
-                queryArea.text = result.queryText.trim()
+                queryArea.text = flattenQuery(result.queryText)
                 statusLabel.text   = "<html><b><font color='#27AE60'>✓ SUCCESS</font></b></html>"
                 durationLabel.text = "<html><font color='gray'>${result.durationMs} ms</font></html>"
                 rowsLabel.text     = "<html><font color='gray'>${result.records.size} row(s)</font></html>"
             }
             is QueryResult.Failure -> {
-                queryArea.text = result.queryText.trim()
+                queryArea.text = flattenQuery(result.queryText)
                 val errMsg = buildErrorSummary(result.error)
                 statusLabel.text   = "<html><b><font color='#E74C3C'>✗ FAILED</font></b></html>"
                 durationLabel.text = ""
@@ -97,6 +96,12 @@ class QuerySummaryPanel : JPanel(BorderLayout()) {
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
+
+    /** Collapses newlines/whitespace runs into single spaces and truncates for single-line display. */
+    private fun flattenQuery(query: String): String {
+        val flat = query.trim().replace(Regex("\\s*[\\r\\n]+\\s*"), " ")
+        return if (flat.length > 120) flat.take(117) + "…" else flat
+    }
 
     /**
      * Produces a concise error string from [error]: the exception's simple class name

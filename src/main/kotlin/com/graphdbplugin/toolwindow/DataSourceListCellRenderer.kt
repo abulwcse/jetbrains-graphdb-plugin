@@ -57,18 +57,27 @@ class DataSourceListCellRenderer(
         // ----------------------------------------------------------------
         // Icon — a small coloured square painted from the data source colour
         // ----------------------------------------------------------------
-        val ready = connectionStates[value.id] == ConnectionState.READY
-        icon = ColorSwatchIcon(parseColor(value.color), dimmed = !ready)
+        val state = connectionStates[value.id]
+        icon = ColorSwatchIcon(parseColor(value.color), dimmed = state != ConnectionState.READY)
 
         // Name — greyed out until the connection is verified
-        val nameStyle = if (connectionStates[value.id] == ConnectionState.READY)
+        val nameStyle = if (state == ConnectionState.READY)
             SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
         else
             SimpleTextAttributes.GRAYED_ATTRIBUTES
         append(value.name, nameStyle)
 
+        val hint = when (state) {
+            ConnectionState.CHECKING -> " (connecting…)"
+            ConnectionState.FAILED   -> " (connection failed)"
+            ConnectionState.READY    -> ""
+            null                     -> " (not verified)"
+        }
+        if (hint.isNotEmpty())
+            append(hint, SimpleTextAttributes(SimpleTextAttributes.STYLE_ITALIC, SimpleTextAttributes.GRAYED_ATTRIBUTES.fgColor))
+
         // Tooltip shows full details + connection status on hover
-        toolTipText = buildTooltip(value, connectionStates[value.id])
+        toolTipText = buildTooltip(value, state)
     }
 
     // =========================================================================

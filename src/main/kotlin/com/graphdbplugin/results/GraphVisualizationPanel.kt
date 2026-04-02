@@ -135,7 +135,7 @@ class GraphVisualizationPanel : JPanel(BorderLayout()) {
         }
 
         val zoomOut   = styledBtn("−",  "Zoom out (Ctrl+−)")  { graphComponent.zoomOut() }
-        val zoomReset = styledBtn("⊡",  "Fit to window")      { graphComponent.zoomAndCenter() }
+        val zoomReset = styledBtn("⊡",  "Fit to window")      { fitToViewport() }
         val zoomIn    = styledBtn("+",  "Zoom in (Ctrl++)")   { graphComponent.zoomIn() }
 
         val btnRow = JPanel(FlowLayout(FlowLayout.RIGHT, 4, 0)).apply {
@@ -222,11 +222,7 @@ class GraphVisualizationPanel : JPanel(BorderLayout()) {
 
         graphComponent.setToolTips(true)
         rebuildLegend()
-        // Defer fit-to-content until after the EDT has finished painting the layout
-        SwingUtilities.invokeLater {
-            graphComponent.zoomAndCenter()
-            graphComponent.refresh()
-        }
+        fitWhenReady()
     }
 
     // ── Legend ────────────────────────────────────────────────────────────────
@@ -371,6 +367,38 @@ class GraphVisualizationPanel : JPanel(BorderLayout()) {
         String.format("#%02x%02x%02x", d.red, d.green, d.blue)
     } catch (_: Exception) { hex }
 
+    // ── Fit to window ─────────────────────────────────────────────────────────
+    private fun fitWhenReady() {
+        if (graphComponent.width > 0 && graphComponent.height > 0) {
+            fitToViewport()
+        } else {
+            graphComponent.addComponentListener(object : java.awt.event.ComponentAdapter() {
+                override fun componentResized(e: java.awt.event.ComponentEvent) {
+                    if (graphComponent.width > 0 && graphComponent.height > 0) {
+                        graphComponent.removeComponentListener(this)
+                        fitToViewport()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun fitToViewport() {
+        val bounds = graph.graphBounds
+        if (bounds.width <= 0 || bounds.height <= 0) return
+        val vp = graphComponent.viewport
+        if (vp.width <= 0 || vp.height <= 0) return
+        val currentScale = graph.view.scale
+        val actualW = bounds.width / currentScale
+        val actualH = bounds.height / currentScale
+        val padding = 40.0
+        val scale = minOf((vp.width - padding) / actualW, (vp.height - padding) / actualH, 1.0)
+        if (scale > 0) {
+            graphComponent.zoomTo(scale, true)
+            graphComponent.refresh()
+        }
+    }
+
     // ── Mouse / context menu ──────────────────────────────────────────────────
     private fun installMouseHandlers() {
         val popup      = JPopupMenu()
@@ -379,18 +407,16 @@ class GraphVisualizationPanel : JPanel(BorderLayout()) {
         popup.add(exportItem)
 
         graphComponent.graphControl.addMouseListener(object : java.awt.event.MouseAdapter() {
+            override fun mouseEntered(e: java.awt.event.MouseEvent) {
+                graphComponent.graphControl.requestFocusInWindow()
+            }
             override fun mousePressed(e: java.awt.event.MouseEvent) {
                 if (SwingUtilities.isRightMouseButton(e))
                     popup.show(graphComponent, e.x, e.y)
             }
-
-        })
-
-        graphComponent.graphControl.addMouseListener(object : java.awt.event.MouseAdapter() {
             override fun mouseClicked(e: java.awt.event.MouseEvent) {
                 if (e.clickCount == 2 && SwingUtilities.isLeftMouseButton(e)) {
                     val cell = graphComponent.getCellAt(e.x, e.y) ?: return
-                    // Look up directly by cell object identity — no ID casting needed
                     val nd = cellToNodeData[cell] ?: return
                     showNodeProperties(nd)
                 }

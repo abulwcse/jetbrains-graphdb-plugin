@@ -168,36 +168,18 @@ class DataSourceTreePanel(private val project: Project) : JPanel(BorderLayout())
         // Enable/disable Edit & Delete based on selection changes.
         dataSourceList.addListSelectionListener { e: ListSelectionEvent ->
             if (!e.valueIsAdjusting) {
-                // Trigger action-presentation updates so the toolbar buttons repaint.
-                ActionManager.getInstance().tryToExecute(
-                    ActionManager.getInstance().getAction("GraphDB.ToolPanel.Edit") ?: return@addListSelectionListener,
-                    null, dataSourceList, "GraphDB.DataSourceToolbar", false
-                )
+                dataSourceList.repaint()
             }
         }
 
-        // Double-click opens the data source only when the connection is verified.
+        // Double-click opens the data source only when the connection is READY.
+        // Non-READY items are already greyed out in the renderer — do nothing on double-click.
         dataSourceList.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 if (e.clickCount == 2) {
                     val selected = dataSourceList.selectedValue ?: return
-                    when (connectionStates[selected.id]) {
-                        ConnectionState.READY -> openDataSource(selected)
-                        ConnectionState.CHECKING -> Messages.showInfoMessage(
-                            project,
-                            "Connection to '${selected.name}' is still being verified. Please wait.",
-                            "Connecting…"
-                        )
-                        ConnectionState.FAILED -> Messages.showErrorDialog(
-                            project,
-                            "Cannot open '${selected.name}' — connection failed.\nCheck the URL and credentials.",
-                            "Connection Failed"
-                        )
-                        null -> Messages.showInfoMessage(
-                            project,
-                            "Connection to '${selected.name}' has not been verified yet.",
-                            "Not Ready"
-                        )
+                    if (connectionStates[selected.id] == ConnectionState.READY) {
+                        openDataSource(selected)
                     }
                 }
             }
